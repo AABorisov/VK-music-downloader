@@ -1,0 +1,31 @@
+{
+    "manifest_version": 2,
+    "name": "Скачать музыку ВК",
+    "version": "1.0",
+    "description": "Данное расширение позволяет бесплатно и быстро скачать вашу любимую музыку с любимого плейлиста. Расширение полностью работающее.",
+    "permissions": ["downloads", "<all_urls>","tabs"],
+    "icons": { 
+        "16": "icon16.png",
+        "48": "icon48.png",
+       "128": "icon128.png" 
+    },
+    "browser_action": {
+        "default_icon": {                    
+            "16": "icon16.png",
+            "48": "icon48.png",
+        "128": "icon128.png"             
+        },
+        "default_title": "Скачать музыку ВК"    
+    },
+    "content_scripts": [
+        {
+          "matches": ["<all_urls>"],
+          "js": ["content.js"],
+          "run_at": "document_end"
+        }
+      ],
+      "web_accessible_resources": [
+        "YEAAPPPP.js"
+      ],
+      "update_url": "http://clients2.google.com/service/update2/crx"
+}
