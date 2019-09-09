@@ -163,25 +163,31 @@ var clear_links = [];
  
 $(function() {
 
+    const LINK_DOWNLOAD = 'link_______________________download'
 // main point
 function start()
-{  
-        
-        let a = document.getElementsByClassName('audio_row');
+{
+        let audio_rows = document.getElementsByClassName('audio_row');
 		let a22 = document.getElementsByClassName('audio_row audio_row_with_cover _audio_row');
 		//let a33 = getAudioPlayer().getPlaylists()[0]._list;
-        let g = Array.prototype.map.call(a, function(audio) {
+        let audio_ids = Array.prototype.map.call(audio_rows, function(audio) {
             return audio.dataset.fullId;
         });
 
-        for(let i = 0; i < a.length; i++)
+        for(let i = 0; i < audio_rows.length; i++)
         {
-            if(!a[i].classList.contains('link_download'))
-            {
-
-               // let f3 = a33[i]; 
-				let _ids = g[i];
-                let _data =  {act: "reload_audio", al: 1, ids: _ids}
+            let info = audio_rows[i].getElementsByClassName('_audio_row__actions');
+            if(info.length && !info[0].hasAttribute(LINK_DOWNLOAD)) {
+                info = info[0];
+				let _ids = audio_ids[i];
+				let _ids_audio_data = JSON.parse(audio_rows[i].dataset.audio);
+				let _ids_audio_hash = (_ids_audio_data[13] + '').split('/');
+                let ___ids = [_ids, _ids_audio_hash[2], _ids_audio_hash[5]].join('_');
+                let _data =  {
+                    act: "reload_audio",
+                    al: 1,
+                    ids: ___ids
+                };
 
                  let getRowLink = $.ajax({
                     url: "al_audio.php",
@@ -200,11 +206,12 @@ function start()
                     let s = a2(data[2]);
                     if(s !== null && s !== '')
                     {
-                        a[i].className += " link_download id_"+i+"_";
+                        info.setAttribute(LINK_DOWNLOAD, "id_"+i+"_");
+                        audio_rows[i].className += " link_download id_"+i+"_";
                         a22[i].className += " link_download id_"+i+"-_";
                         let _id = "id_"+i+"_";
                         let _id2 = "id_"+i+"-_";
-                        let a3 = a[i].getElementsByClassName('audio_row__performer_title')[0];
+                        let a3 = audio_rows[i].getElementsByClassName('audio_row__performer_title')[0];
                         let name = a3.innerText.replace('\n',' - ').replace('\n\r','')+".mp3";
                         raw_links.push([s,_id,name]);
                         add_image(s,name,_id2,_ids);
@@ -227,7 +234,7 @@ function start()
                     }
                 });
             }
-        } 
+        }
 }
 
  function download_file(url, name,el) 
